@@ -1,6 +1,7 @@
 import { Button, Card, Elevation, Tab, Tabs } from "@blueprintjs/core";
 import * as R from "ramda";
 import * as React from "react";
+import shortid from "shortid";
 import { container, padding } from "../consts/styles";
 import { dataType } from "../pages/index";
 
@@ -54,13 +55,24 @@ class Transcriptor extends React.Component<IProps, IState> {
     }
 
     private renderPanel = () => {
+        const pages = R.groupWith((a, b) =>
+            R.head(R.split("-", a.para)) === R.head(R.split("-", b.para))
+            , this.props.data);
+
+        const splitToParagraphs: ((l: dataType) => dataType[]) = R.groupWith((a, b) =>
+            (a.para && b.para) && R.last(R.split("-", a.para)) === R.last(R.split("-", b.para)));
+
         return (
-            <Card elevation={Elevation.TWO}>
-                Current language is {this.state.currentLanguage}
-                <br />
-                {R.join(" ", R.map(({ name }) => name, this.props.data))}
-            </Card>
-        );
+            <div>
+                {
+                    R.map((page) => <Card key={shortid.generate()} elevation={Elevation.TWO}>
+                        < br />
+                        {R.map((paragraph) => <p key={shortid.generate()}>{R.join(" ",
+                            R.map(({ name }) => name, paragraph))}</p>,
+                            splitToParagraphs(page))}
+                    </Card >, pages)
+                }
+            </div>);
     }
 
     private renderNavigation = () => {
