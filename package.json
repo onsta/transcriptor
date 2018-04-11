@@ -23,6 +23,7 @@
   "dependencies": {
     "@blueprintjs/icons": "^2.1.1",
     "express": "^4.16.3",
+    "isomorphic-unfetch": "^2.0.0",
     "next": "^5.1.0",
     "ramda": "^0.25.0",
     "react": "^16.3.0",

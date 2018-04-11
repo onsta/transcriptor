@@ -4,7 +4,7 @@ Simple transcription interface
 
 ## TODO
 * Create mockup DONE
-* Populate it with data
+* Populate it with data DONE
 * Implement translation
 * Implement lazy loading
 * Create simple API test

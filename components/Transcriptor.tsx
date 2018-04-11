@@ -1,6 +1,8 @@
 import { Button, Card, Elevation, Tab, Tabs } from "@blueprintjs/core";
+import * as R from "ramda";
 import * as React from "react";
 import { container, padding } from "../consts/styles";
+import { dataType } from "../pages/index";
 
 enum Languages {
     English = "English",
@@ -8,6 +10,7 @@ enum Languages {
 }
 
 interface IProps {
+    data: dataType;
 }
 
 interface IState {
@@ -54,6 +57,8 @@ class Transcriptor extends React.Component<IProps, IState> {
         return (
             <Card elevation={Elevation.TWO}>
                 Current language is {this.state.currentLanguage}
+                <br />
+                {R.join(" ", R.map(({ name }) => name, this.props.data))}
             </Card>
         );
     }
