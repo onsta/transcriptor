@@ -1,7 +1,5 @@
 import * as React from "react";
-import Footer from "../components/Footer";
-import MainNavigation from "../components/MainNavigation";
-import { container, font, padding } from "../consts/styles";
+import { font, padding } from "../consts/styles";
 
 interface IProps {
   children: React.ReactNode;
@@ -12,11 +10,9 @@ class Layout extends React.Component<IProps> {
     const { children } = this.props;
     return (
       <React.Fragment>
-        <MainNavigation />
         <main>
           {children}
         </main>
-        <Footer />
         <style jsx global>
           {`
               html {
@@ -32,10 +28,6 @@ class Layout extends React.Component<IProps> {
               }
               h1 {
                 margin-bottom: ${padding.small}
-              }
-              .__next {
-                max-width: ${container.maxWidth};
-                min-width: ${container.minWidth};
               }
             `}
         </style>

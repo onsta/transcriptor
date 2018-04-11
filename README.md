@@ -3,7 +3,7 @@
 Simple transcription interface
 
 ## TODO
-* Create mockup
+* Create mockup DONE
 * Populate it with data
 * Implement translation
 * Implement lazy loading

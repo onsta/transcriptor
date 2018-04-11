@@ -10,6 +10,5 @@ export enum padding {
 }
 
 export enum container {
-    maxWidth = "240rem",
-    minWidth = "50rem",
+    width = "100rem",
 }
