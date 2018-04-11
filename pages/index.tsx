@@ -10,6 +10,7 @@ export type dataType = Array<{ name: string; para: string }>;
 interface IProps {
     statusCode?: number;
     data: {
+        numberOfPages: number,
         transcript: {
             words: dataType;
         };
@@ -17,13 +18,19 @@ interface IProps {
 }
 
 class Home extends React.Component<IProps> {
+    /**
+     * Get the initial data
+     */
     public static async getInitialProps() {
         const res: {
             statusCode?: number;
             json: () => Promise<any>
-        } = await fetch("https://s3.amazonaws.com/com.trint.misc.challenge/transcript.json");
-        const statusCode = res.statusCode > 200 ? res.statusCode : false;
+        } = await fetch("http://localhost:3000/api/0");
+        let statusCode = res.statusCode > 200 ? res.statusCode : false;
         const data = await res.json();
+        if (data.statusCode) {
+            statusCode = data.statusCode;
+        }
         return { statusCode, data };
     }
 
@@ -33,7 +40,8 @@ class Home extends React.Component<IProps> {
         }
         return (
             <Layout><Title title="Home"><h1>Home</h1>
-                <Transcriptor data={this.props.data.transcript.words} /></Title></Layout>
+                <Transcriptor initialData={this.props.data.transcript.words}
+                    numberOfPages={Number(this.props.data.numberOfPages)} /></Title></Layout>
         );
     }
 }

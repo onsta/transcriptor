@@ -29,6 +29,12 @@ class Layout extends React.Component<IProps> {
               h1 {
                 margin-bottom: ${padding.small}
               }
+              .pt-card {
+                margin-bottom: ${padding.small}
+              }
+              .pt-card:last-child {
+                margin-bottom: 0
+              }
             `}
         </style>
       </React.Fragment>

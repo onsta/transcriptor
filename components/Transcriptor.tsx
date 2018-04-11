@@ -11,19 +11,46 @@ enum Languages {
 }
 
 interface IProps {
-    data: dataType;
+    initialData: dataType;
+    numberOfPages: number;
 }
 
 interface IState {
     currentLanguage: Languages;
+    currentPage: number;
+    data: dataType;
+    loading: boolean;
 }
 
 class Transcriptor extends React.Component<IProps, IState> {
     public state = {
         currentLanguage: Languages.English,
+        currentPage: 0,
+        data: this.props.initialData,
+        loading: false,
     };
+    public componentDidMount() {
+        window.addEventListener("scroll", this.onScroll, false);
+        this.onScroll();
+    }
+
+    public componentWillUnmount() {
+        window.removeEventListener("scroll", this.onScroll, false);
+    }
+
+    /**
+     * Should be throttled
+     */
+    private onScroll = () => {
+        if (
+            (window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 300) &&
+            this.state.currentPage < this.props.numberOfPages - 1 && !this.state.loading
+        ) {
+            this.handleNext();
+        }
+    }
+
     public render() {
-        const { } = this.props;
         return (
             <section>
                 <Tabs id="TranscriptorLanguages" onChange={this.handleLanguageChange}
@@ -48,16 +75,41 @@ class Transcriptor extends React.Component<IProps, IState> {
         });
     }
 
-    private handleNext = () => {
+    private loadMore = async () => {
+        const res: {
+            statusCode?: number;
+            json: () => Promise<any>
+        } = await fetch(`http://localhost:3000/api/${this.state.currentPage + 1}`);
+        let statusCode = res.statusCode > 200 ? res.statusCode : false;
+        const data = await res.json();
+        if (data.statusCode) {
+            statusCode = data.statusCode;
+        }
+        return { statusCode, data };
+    }
+
+    private handleNext = async () => {
+        if (this.state.currentPage < this.props.numberOfPages - 1 && !this.state.loading) {
+            this.setState({
+                loading: true,
+            });
+            const data = await this.loadMore();
+            this.setState((prevState) => ({
+                currentPage: prevState.currentPage + 1,
+                data: R.concat(prevState.data, data.data.transcript.words),
+                loading: false,
+            }));
+        }
     }
 
     private handleTranslate = () => {
+        return false;
     }
 
     private renderPanel = () => {
         const pages = R.groupWith((a, b) =>
             R.head(R.split("-", a.para)) === R.head(R.split("-", b.para))
-            , this.props.data);
+            , this.state.data);
 
         return (
             <div>
@@ -94,7 +146,8 @@ class Transcriptor extends React.Component<IProps, IState> {
     private renderNavigation = () => {
         return (
             <div>
-                <Button icon="arrow-right" text="Next" onClick={this.handleNext} />
+                <Button icon="arrow-right" text="Next" onClick={this.handleNext}
+                    disabled={this.state.currentPage === this.props.numberOfPages - 1 || this.state.loading === true} />
                 <Button icon="translate" text="Translate" onClick={this.handleTranslate} />
                 <style jsx>{`
                 div {

@@ -6,9 +6,9 @@ Simple transcription interface
 * Create mockup DONE
 * Populate it with data DONE
 * Implement translation
-* Implement lazy loading
-* Create simple API test
-* Publish to github 
+* Implement lazy loading DONE
+* Create simple API DONE
+* Publish to github DONE
 * Publish online
 
 ## Getting Started

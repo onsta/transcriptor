@@ -26,15 +26,28 @@ app.prepare().then(() => {
       R.groupWith((a: { name: string, para: string }, b: { name: string, para: string }) =>
         R.head(R.split("-", a.para)) === R.head(R.split("-", b.para))
         , data.transcript.words);
+
+    if (statusCode) {
+      res.send({ statusCode });
+      return;
+    }
+
+    /**
+     * Should implement also other checks
+     */
+    if (!Number.isInteger(Number(req.params.page)) || req.params.page >= pages.length) {
+      res.send({ statusCode: 404 });
+      return;
+    }
+
     res.send({
       numberOfPages: pages.length,
-      statusCode,
-      data: {
-        transcript: {
-          words: pages[req.params.page],
-        },
+      transcript: {
+        words: pages[req.params.page],
       },
-    });
+    },
+    );
+    return;
   });
 
   server.get("*", (req, res) => {
