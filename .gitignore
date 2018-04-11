@@ -22,3 +22,6 @@ coverage
 # test output
 test/**/out
 .DS_Store
+
+# keys
+keys

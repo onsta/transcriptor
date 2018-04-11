@@ -59,20 +59,36 @@ class Transcriptor extends React.Component<IProps, IState> {
             R.head(R.split("-", a.para)) === R.head(R.split("-", b.para))
             , this.props.data);
 
-        const splitToParagraphs: ((l: dataType) => dataType[]) = R.groupWith((a, b) =>
-            (a.para && b.para) && R.last(R.split("-", a.para)) === R.last(R.split("-", b.para)));
-
         return (
             <div>
+                {this.renderPages(pages)}
+            </div>);
+    }
+
+    private renderPages = (pages) => {
+        const splitToParagraphs: ((l: dataType) => dataType[]) = R.groupWith((a, b) =>
+            (a.para && b.para) && R.last(R.split("-", a.para)) === R.last(R.split("-", b.para)));
+        return (
+            <React.Fragment>
                 {
                     R.map((page) => <Card key={shortid.generate()} elevation={Elevation.TWO}>
-                        < br />
-                        {R.map((paragraph) => <p key={shortid.generate()}>{R.join(" ",
-                            R.map(({ name }) => name, paragraph))}</p>,
-                            splitToParagraphs(page))}
+                        {this.renderParagraphs(splitToParagraphs(page))}
                     </Card >, pages)
                 }
-            </div>);
+            </React.Fragment>
+        );
+    }
+
+    private renderParagraphs = (praragraphs) => {
+        return (
+            <React.Fragment>
+                {
+                    R.map((paragraph) => <p key={shortid.generate()}>{R.join(" ",
+                        R.map(({ name }) => name, paragraph))}</p>,
+                        praragraphs)
+                }
+            </React.Fragment>
+        );
     }
 
     private renderNavigation = () => {
